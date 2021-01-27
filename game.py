@@ -96,7 +96,7 @@ class Enemy(pygame.sprite.Sprite):
         super(Enemy, self).__init__()
         self.surf = pygame.image.load("images/enemy_ship.png")
         self.rect = self.surf.get_rect(
-            center=(screen_width, random.randint(2, screen_height - 50))
+            center=(screen_width, random.randint(50, screen_height - 50))
         )
         self.speed = random.randint(1, 2)
 
@@ -162,7 +162,7 @@ class Vimana(object):
         self.font_30 = pygame.font.Font(None, 30)
         self.font_40 = pygame.font.Font(None, 40)
 
-        self.reload_time = 0.01  # Seconds it takes to reload after a shot
+        self.reload_time = 0.5  # Seconds it takes to reload after a shot
         self.next_shot_time = 0  # Can we fire yet ? current_time + reload_time
 
         self.enemy_explosion_images = []
