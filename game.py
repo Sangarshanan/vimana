@@ -173,6 +173,9 @@ class Vimana(object):
             img_ts = pygame.transform.scale(img, (100, 100))
             self.enemy_explosion_images.append(img_ts)
 
+        self.player_shoot_sound = pygame.mixer.Sound('sounds/laser_player.ogg')
+        self.enemy_shoot_sound = pygame.mixer.Sound('sounds/laser_enemy.ogg')
+
         self.initial_score = 0
 
         self.home_screen = True
@@ -216,6 +219,13 @@ class Vimana(object):
         )
         screen.blit(text_start, text_start_rect)
 
+        text_bottom = self.font_30.render("Made Ironically by Sangarshanan", True, WHITE)
+        text_bottom_rect = text_bottom.get_rect(
+            center=(screen.get_width() / 2+20, screen_height-50,)
+        )
+        screen.blit(text_bottom, text_bottom_rect)
+
+
     def _score(self, increment=0):
         self.initial_score += increment
         text = self.font_50.render(f"Score: {self.initial_score}", False, WHITE)
@@ -225,6 +235,8 @@ class Vimana(object):
     def main(self):
         """Game loop."""
         self._init_game()
+        pygame.mixer.music.load('sounds/homescreen.ogg')
+        pygame.mixer.music.play(-1)
 
         while self.game_loop:
             if self.home_screen:
@@ -238,6 +250,7 @@ class Vimana(object):
 
                 for event in pygame.event.get():
                     if event.type == loc.QUIT:
+                        pygame.mixer.music.stop()
                         self.game_loop = False
 
                     # Enemy Spawns
@@ -255,6 +268,7 @@ class Vimana(object):
                             random_enemy.alive()
                             and random_enemy.rect.right > screen_width / 2
                         ):
+                            self.enemy_shoot_sound.play()
                             enemy_bullet = EnemyBullet(
                                 random_enemy.rect.x - 30, random_enemy.rect.y + 30
                             )
@@ -268,6 +282,7 @@ class Vimana(object):
                             event.key == pygame.K_SPACE
                             and current_time > self.next_shot_time
                         ):
+                            self.player_shoot_sound.play()
                             self.next_shot_time = current_time + self.reload_time
                             bullet = Bullet(
                                 self.player.rect.x + self.player_x,
